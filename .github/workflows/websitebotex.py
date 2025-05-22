@@ -84,6 +84,18 @@ except Exception as e:
     print(f"Error occurred(username): {e}")
 #---------------------------
 try:
+    # Check if username is incorrect
+    try:
+        wait = WebDriverWait(driver, 10)
+        error_elem = wait.until(EC.visibility_of_element_located((By.ID, "error-identifier")))
+        if error_elem:# and "couldn't find your account" in error_elem.text.lower()
+            print("Username is incorrect")
+            driver.quit()
+            exit()  
+    except Exception as e:
+            print(f"Username check failed")
+    
+    wait = WebDriverWait(driver, 20)
     # Wait for the password field to be visible
     password = WebDriverWait(driver, 20).until(
         EC.presence_of_element_located((By.ID, "password-field"))
@@ -100,10 +112,18 @@ except Exception as e:
 #---------------------------
 try:
     # Wait for the start button to be visible
-    wait = WebDriverWait(driver, 30)
-    # Ensure the button is visible
-    #startworld = wait.until(EC.visibility_of_element_located((By.XPATH, "//button[contains(@class, 'btn-primary')]")))
-    startworld = driver.find_element(By.CSS_SELECTOR, "button.btn-primary")
+    try:
+        wait = WebDriverWait(driver, 20)
+        startworld = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button.btn-primary")))
+    except:
+        try:
+            error_elem = wait.until(EC.visibility_of_element_located((By.ID, "error-password")))
+            if error_elem and "incorrect" in error_elem.text.lower():
+                print("Password is incorrect")
+                driver.quit()
+                exit()
+        except Exception as e:
+            print(f"Password check failed:")
     
     # Now ensure it’s clickable
     startworld = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button.btn-primary")))
