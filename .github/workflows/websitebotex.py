@@ -1,5 +1,6 @@
 import psutil
 import os
+import sys
 os.system("pkill -9 chrome")  # Forcefully kill all Chrome processes
 def kill_chrome():
     for process in psutil.process_iter(attrs=["pid", "name"]):
@@ -93,7 +94,7 @@ try:
         if error_elem:
             print("Username is incorrect")
             driver.quit()
-            exit()  
+            sys.exit()  
     except:
         pass
         
@@ -126,7 +127,7 @@ try:
             if error_elem:
                 print("Password is incorrect")
                 driver.quit()
-                exit()
+                sys.exit()
         except:
             print(f"Password check failed:")
     
