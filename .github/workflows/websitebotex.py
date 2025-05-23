@@ -104,7 +104,8 @@ try:
         EC.presence_of_element_located((By.ID, "password-field"))
     )
     
-    # Now enter password    
+    # Now enter password  
+    old_url = driver.current_url
     driver.execute_script("arguments[0].scrollIntoView(true);", password)
     driver.execute_script("arguments[0].click();", password)
     password.send_keys(passwordsec)
@@ -122,15 +123,29 @@ try:
         wait = WebDriverWait(driver, 20)
         startworld = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button.btn-primary")))
     except:
-        try: # Check if password is incorrect
-            error_elem = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.ID, "error-password")))
-            if error_elem:
-                print("Password is incorrect")
-                driver.quit()
-                sys.exit()
+        try: # Check if password is incorrect or stop button is already present
+            if driver.current_url == old_url:
+                error_elem = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.ID, "error-password")))
+                if error_elem:
+                    print("Password is incorrect")
+                    driver.quit()
+                    sys.exit()
+            else:
+                try:
+                    stopworld = WebDriverWait(driver, 5).until(
+                        EC.visibility_of_element_located((By.XPATH, "//button[contains(@class, 'btn-error')]"))
+                    )
+                    print("Stop button found — world already running.")
+                    driver.quit()
+                    sys.exit()
+                except:
+                    print("Neither Start nor Stop button found. Something might be wrong.")
+                    driver.quit()
+                    sys.exit()
         except:
-            print(f"Password check failed:")
-    
+            print(f"Unexpected error during start/stop button checks: {inner_exc}")
+            driver.quit()
+            sys.exit()
     # Now ensure it’s clickable
     driver.execute_script("arguments[0].scrollIntoView(true);", startworld)
     driver.execute_script("arguments[0].click();", startworld)
