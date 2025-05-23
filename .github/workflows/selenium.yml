@@ -23,8 +23,8 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install Dependencies
-        run: pip install -r .github/workflows/requirements.txt
+      #- name: Install Dependencies
+        #run: pip install -r .github/workflows/requirements.txt
 
       - name: Install jq
         run: sudo apt-get install -y jq unzip
