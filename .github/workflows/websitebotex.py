@@ -138,10 +138,10 @@ try:
                     print("Stop button found — world already running.")
                     driver.quit()
                     sys.exit()
-                except:
-                    print("Neither Start nor Stop button found. Something might be wrong.")
+                except Exception as e:
+                    print(f"Neither Start nor Stop button found. Something might be wrong: {e}")
                     driver.quit()
-                    sys.exit()
+                    exit()
         except Exception as inner_exc:
             print(f"Unexpected error during start/stop button checks: {inner_exc}")
             driver.quit()
